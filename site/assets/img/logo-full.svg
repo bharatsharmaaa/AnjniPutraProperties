@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="680" height="160" viewBox="0 0 680 160">
+  <style>.navy{fill:#14213D}.gold{fill:#F2A900}.txt{font:700 36px Poppins, Arial, sans-serif}</style>
+  <rect width="680" height="160" fill="#FFFFFF"/>
+  <g transform="translate(40,20)">
+    <rect x="0" y="40" width="60" height="100" rx="3" class="navy"/>
+    <rect x="70" y="28" width="60" height="112" rx="3" class="gold"/>
+    <rect x="140" y="50" width="60" height="90" rx="3" class="navy"/>
+    <text x="220" y="75" class="txt navy">AnjaniPutra</text>
+    <text x="220" y="115" class="txt navy" style="font-weight:600;font-size:22px;letter-spacing:2px">PROPERTIES</text>
+  </g>
+</svg>

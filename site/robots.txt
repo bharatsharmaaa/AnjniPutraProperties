@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+
+# TODO: replace YOUR-DOMAIN with the production domain before launch.
+Sitemap: https://YOUR-DOMAIN/sitemap.xml

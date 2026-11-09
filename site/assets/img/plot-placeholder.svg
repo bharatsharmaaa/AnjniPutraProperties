@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="Photos coming soon">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dbe6f7"/>
+      <stop offset="1" stop-color="#f3f5fb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="675" fill="url(#sky)"/>
+  <path d="M0 380 L180 250 L330 340 L520 190 L720 330 L880 240 L1200 400 L1200 675 L0 675 Z" fill="#b9c9a6"/>
+  <path d="M0 450 L1200 420 L1200 675 L0 675 Z" fill="#9fb889"/>
+  <g fill="none" stroke="#14213D" stroke-width="3" stroke-dasharray="14 10" opacity=".55">
+    <path d="M150 640 L330 470 L560 470 L470 640 Z"/>
+    <path d="M470 640 L560 470 L790 470 L790 640 Z"/>
+    <path d="M790 640 L790 470 L1020 470 L1120 640 Z"/>
+  </g>
+  <path d="M600 675 L640 430 L660 430 L740 675 Z" fill="#e7dcc4" opacity=".9"/>
+  <circle cx="980" cy="140" r="46" fill="#F2A900" opacity=".85"/>
+  <text x="600" y="120" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="40" font-weight="700" fill="#14213D">Photos coming soon</text>
+  <text x="600" y="168" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-size="24" fill="#14213D" opacity=".75">Ask us for more photos, videos and a site visit</text>
+</svg>

@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  :root{--navy:#14213D;--gold:#F2A900;--bg:#f3f5fb;--line:#d5dbe8;--muted:#5b6478;--ok:#15803d;--warn:#b45309;--bad:#b91c1c}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{margin:0;background:var(--bg);color:var(--navy);font:18px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif}
+  .hi{display:block;font-size:.82em;color:var(--muted);font-weight:500}
+  button .hi,.btn .hi{color:inherit;opacity:.85}
+  header.top{position:sticky;top:0;z-index:20;background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:center;gap:10px}
+  header.top h1{font-size:20px;margin:0;flex:1;line-height:1.2}
+  header.top h1 .hi{color:#cbd3e6}
+  header.top button{background:transparent;border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:10px;padding:8px 12px;font:inherit;font-size:15px}
+  main{padding:16px;max-width:680px;margin:0 auto;padding-bottom:120px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tabs button{flex:1;padding:12px;border-radius:12px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:inherit;font-weight:700}
+  .tabs button.on{background:var(--navy);color:#fff}
+  .btn{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:56px;padding:10px 16px;border-radius:14px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:inherit;font-weight:700;text-align:center;text-decoration:none;cursor:pointer;width:100%}
+  .btn.primary{background:var(--gold);border-color:var(--gold)}
+  .btn.dark{background:var(--navy);color:#fff}
+  .btn.danger{border-color:var(--bad);color:var(--bad)}
+  .btn.danger.solid{background:var(--bad);color:#fff}
+  .btn.small{min-height:48px;font-size:16px;padding:8px 10px}
+  .btn:disabled{opacity:.5}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .card{background:#fff;border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 4px 14px rgba(20,33,61,.08)}
+  .listing{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:start}
+  .listing img,.listing .noimg{width:96px;height:96px;border-radius:12px;object-fit:cover;background:#e5e9f2;display:grid;place-items:center;font-size:30px}
+  .listing h3{margin:0 0 2px;font-size:18px;line-height:1.3}
+  .listing .meta{font-size:15px;color:var(--muted)}
+  .listing .actions{grid-column:1/-1}
+  .pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:14px;font-weight:700;margin:4px 6px 0 0}
+  .pill.Available{background:#dcf2e3;color:#14532d}
+  .pill.Few{background:#fde3d3;color:#7c2d12}
+  .pill.Sold{background:#e5e7eb;color:#374151}
+  .pill.Hidden{background:#1f2937;color:#fff}
+  .pill.kind{background:#e7ecf7;color:var(--navy)}
+  .empty{text-align:center;color:var(--muted);padding:30px 10px}
+  /* form */
+  fieldset{border:none;background:#fff;border-radius:16px;padding:16px;margin:0 0 14px;box-shadow:0 4px 14px rgba(20,33,61,.08)}
+  legend{font-weight:800;font-size:19px;padding:0;margin-bottom:8px;float:left;width:100%}
+  legend + *{clear:both}
+  label.f{display:block;font-weight:700;margin:14px 0 6px}
+  label.f:first-of-type{margin-top:4px}
+  .hint{font-size:14px;color:var(--muted);margin:-2px 0 6px}
+  input[type=text],input[type=number],input[type=password],input[type=url],select,textarea{width:100%;font:inherit;font-size:18px;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--navy)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold)}
+  .invalid{border-color:var(--bad)!important}
+  .err{color:var(--bad);font-size:15px;font-weight:600;margin-top:4px}
+  .repeat{border:2px dashed var(--line);border-radius:14px;padding:10px;margin-bottom:10px;position:relative}
+  .repeat .remove{position:absolute;top:6px;right:6px;width:40px;height:40px;border-radius:50%;border:none;background:#fde3e3;color:var(--bad);font-size:22px;font-weight:700}
+  .repeat label.f{margin-top:6px}
+  .repeat .row-title{font-weight:700;margin:2px 50px 4px 0;font-size:16px;color:var(--muted)}
+  .checks{display:grid;grid-template-columns:1fr;gap:8px}
+  .checks label{display:flex;align-items:center;gap:12px;padding:10px 12px;border:2px solid var(--line);border-radius:12px;font-weight:600;line-height:1.25}
+  .checks input{width:26px;height:26px;flex:none}
+  .checks label:has(input:checked){border-color:var(--gold);background:#fff8e6}
+  .photos{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:10px}
+  .photo{position:relative;border-radius:12px;overflow:hidden;background:#e5e9f2;aspect-ratio:4/3}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .photo .file{display:grid;place-items:center;height:100%;font-size:14px;padding:6px;text-align:center;word-break:break-all}
+  .photo .main{position:absolute;left:6px;top:6px;background:var(--gold);color:var(--navy);font-size:13px;font-weight:800;padding:2px 8px;border-radius:999px}
+  .photo .tools{position:absolute;left:0;right:0;bottom:0;display:flex;gap:6px;padding:6px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+  .photo .tools button{flex:1;min-height:40px;border:none;border-radius:10px;background:rgba(255,255,255,.92);font:inherit;font-size:14px;font-weight:700;color:var(--navy)}
+  .photo .tools button.x{flex:0 0 44px;color:var(--bad);font-size:20px}
+  .upload{position:relative;overflow:hidden}
+  .upload input{position:absolute;opacity:0;width:1px;height:1px}
+  .switch{display:flex;align-items:center;gap:12px;font-weight:700;padding:10px 0}
+  .switch input{width:28px;height:28px}
+  .avail{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .avail label{border:2px solid var(--line);border-radius:12px;padding:10px;font-weight:700;text-align:center;line-height:1.25}
+  .avail input{position:absolute;opacity:0}
+  .avail label:has(input:checked){border-color:var(--navy);background:var(--navy);color:#fff}
+  .avail label:has(input:checked) .hi{color:#cbd3e6}
+  .private{background:#fff8e6}
+  .savebar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 2fr;gap:10px}
+  .savebar > *{max-width:none}
+  /* leads */
+  .lead h3{margin:0;font-size:19px}
+  .lead .meta{font-size:15px;color:var(--muted);margin:4px 0}
+  .lead .detail{font-size:16px;margin:6px 0}
+  .lead .new{background:#fde3d3}
+  /* overlays */
+  #busy{position:fixed;inset:0;background:rgba(20,33,61,.55);z-index:100;display:grid;place-items:center;color:#fff;text-align:center;font-weight:700;padding:20px}
+  #busy .spin{width:56px;height:56px;border:6px solid rgba(255,255,255,.3);border-top-color:var(--gold);border-radius:50%;margin:0 auto 14px;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #toast{position:fixed;left:16px;right:16px;bottom:96px;z-index:90;background:var(--ok);color:#fff;padding:16px;border-radius:14px;font-weight:700;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  #toast.bad{background:var(--bad)}
+  #toast .hi{color:#fff;opacity:.9}
+  #dialog{position:fixed;inset:0;z-index:110;background:rgba(20,33,61,.6);display:grid;place-items:center;padding:20px}
+  #dialog .box{background:#fff;border-radius:18px;padding:20px;max-width:440px;width:100%}
+  #dialog h2{margin:0 0 8px;font-size:21px}
+  #dialog p{margin:0 0 16px;color:var(--muted)}
+  #dialog .row2{margin-top:8px}
+  .login{max-width:420px;margin:40px auto;text-align:center}
+  .login input{text-align:center;font-size:28px;letter-spacing:.3em}
+  .muted{color:var(--muted)}
+  .stack > * + *{margin-top:10px}
+  a{color:#1e40af}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="busy" hidden><div><div class="spin"></div><div id="busyText"></div></div></div>
+<div id="toast" hidden></div>
+<div id="dialog" hidden></div>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- constants ----------
+  var TOKEN_KEY = 'ap_admin_token';
+  var PLOT_TYPES = [
+    ['Villa Plots', 'विला प्लॉट'], ['NA Plots', 'एनए प्लॉट'], ['Residential Plots', 'रिहायशी प्लॉट'],
+    ['Farmhouse Plots', 'फार्महाउस प्लॉट'], ['Commercial Plots', 'कमर्शियल प्लॉट']
+  ];
+  var STATUSES = [
+    ['Pre-launch', 'प्री-लॉन्च'], ['Under development', 'काम चल रहा है'], ['Ongoing', 'चालू प्रोजेक्ट'],
+    ['Ready for registration', 'रजिस्ट्री के लिए तैयार'], ['Ready to build', 'घर बनाने के लिए तैयार']
+  ];
+  var AVAILABILITY = [
+    ['Available', 'उपलब्ध'], ['Few left', 'कुछ ही बचे'],
+    ['Sold out', 'सब बिक गए'], ['Hidden', 'वेबसाइट पर छुपाएँ']
+  ];
+  var AMENITIES = [
+    ['Gated entry with CCTV', 'गेट और सीसीटीवी'], ['Community hall', 'कम्युनिटी हॉल'], ['Clubhouse', 'क्लबहाउस'],
+    ['Garden parks', 'गार्डन'], ["Kids' play area", 'बच्चों का खेल क्षेत्र'], ['Jogging track', 'जॉगिंग ट्रैक'],
+    ['Open-air gym', 'ओपन जिम'], ['Swimming pool', 'स्विमिंग पूल'], ['Indoor games', 'इनडोर गेम्स'],
+    ['Internal roads', 'अंदरूनी सड़कें'], ['Street lights', 'स्ट्रीट लाइट'], ['Solar street lighting', 'सोलर स्ट्रीट लाइट'],
+    ['Water supply', 'पानी की सप्लाई'], ['Electricity connection', 'बिजली कनेक्शन'], ['Rainwater harvesting', 'वर्षा जल संचयन']
+  ];
+  var FLAT_TYPES = [['1', '1 BHK'], ['1.5', '1.5 BHK'], ['2', '2 BHK'], ['2.5', '2.5 BHK'], ['3', '3 BHK'], ['3.5', '3.5 BHK'], ['4', '4 BHK'], ['5', '5 BHK']];
+  var FLAT_STATUSES = [['Ready to move', 'रहने के लिए तैयार'], ['Under construction', 'निर्माणाधीन'], ['Resale', 'रीसेल']];
+  var FACILITIES = [
+    ['Lift', 'लिफ़्ट'], ['Parking', 'पार्किंग'], ['Puzzle parking', 'पज़ल पार्किंग'], ['24/7 security with CCTV', '24 घंटे सुरक्षा और सीसीटीवी'],
+    ['Power backup', 'पावर बैकअप'], ['Gymnasium', 'जिम'], ['Swimming pool', 'स्विमिंग पूल'], ['Clubhouse', 'क्लबहाउस'],
+    ['Garden', 'गार्डन'], ["Children's play area", 'बच्चों का खेल क्षेत्र'], ['Indoor games', 'इनडोर गेम्स'],
+    ['Water treatment plant', 'पानी साफ़ करने का प्लांट'], ['STP plant', 'एसटीपी प्लांट'], ['Intercom', 'इंटरकॉम']
+  ];
+  var DEFAULT_APPROVALS = 'RERA registered — registration details shared on enquiry';
+
+  // ---------- state ----------
+  var state = { token: null, view: 'list', listings: [], siteUrl: '', leads: [], leadStatuses: [], draft: null, dirty: false, newUploads: [] };
+
+  // ---------- helpers ----------
+  var app = document.getElementById('app');
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function L(en, hi) { return esc(en) + '<span class="hi">' + esc(hi) + '</span>'; }
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+  function store(key, value) { try { if (value == null) localStorage.removeItem(key); else localStorage.setItem(key, value); } catch (_e) {} }
+  function load(key) { try { return localStorage.getItem(key); } catch (_e) { return null; } }
+
+  function photoUrl(src, width) {
+    var m = String(src || '').match(/^drive:([\w-]+)/);
+    if (m) return 'https://lh3.googleusercontent.com/d/' + m[1] + '=w' + (width || 600);
+    if (/^https?:\/\//i.test(src)) return src;
+    if (state.siteUrl) return state.siteUrl.replace(/\/?$/, '/') + (/^assets\//.test(src) ? src : 'assets/img/' + src);
+    return '';
+  }
+
+  function busy(textEn, textHi) {
+    var el = document.getElementById('busy');
+    if (!textEn) { el.hidden = true; return; }
+    document.getElementById('busyText').innerHTML = L(textEn, textHi);
+    el.hidden = false;
+  }
+
+  var toastTimer;
+  function toast(en, hi, bad) {
+    var el = document.getElementById('toast');
+    el.innerHTML = L(en, hi);
+    el.className = bad ? 'bad' : '';
+    el.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.hidden = true; }, bad ? 6000 : 3500);
+  }
+
+  // Big, bilingual replacement for confirm(). Resolves true/false.
+  function ask(titleEn, titleHi, textEn, textHi, okEn, okHi, danger) {
+    return new Promise(function (resolve) {
+      var el = document.getElementById('dialog');
+      el.innerHTML = '<div class="box"><h2>' + L(titleEn, titleHi) + '</h2>' +
+        (textEn ? '<p>' + L(textEn, textHi) + '</p>' : '') +
+        '<div class="row2"><button class="btn" data-a="no">' + L('Go back', 'वापस जाएँ') + '</button>' +
+        '<button class="btn ' + (danger ? 'danger solid' : 'dark') + '" data-a="yes">' + L(okEn, okHi) + '</button></div></div>';
+      el.hidden = false;
+      el.onclick = function (e) {
+        var b = e.target.closest('[data-a]');
+        if (!b && e.target !== el) return;
+        el.hidden = true;
+        resolve(!!b && b.getAttribute('data-a') === 'yes');
+      };
+    });
+  }
+
+  var ERRORS = {
+    AUTH: ['Please enter your PIN again.', 'कृपया अपना पिन फिर से डालें।'],
+    BAD_PIN: ['Wrong PIN. Please try again.', 'पिन गलत है। फिर से कोशिश करें।'],
+    LOCKED: ['Too many wrong tries. Please wait 15 minutes.', 'बहुत बार गलत पिन। 15 मिनट बाद कोशिश करें।'],
+    NO_PIN: ['PIN is not set up yet. Please contact your website helper.', 'पिन अभी सेट नहीं है। वेबसाइट सहायक से संपर्क करें।'],
+    MISSING_FIELDS: ['Please fill the title and location.', 'कृपया शीर्षक और जगह भरें।'],
+    TOO_BIG: ['This photo is too large.', 'यह फ़ोटो बहुत बड़ी है।'],
+    BAD_IMAGE: ['This file is not a photo.', 'यह फ़ाइल फ़ोटो नहीं है।'],
+    STALE: ['The list has changed. Please refresh.', 'सूची बदल गई है। कृपया रीफ़्रेश करें।']
+  };
+  function showError(err) {
+    var msg = String((err && err.message) || err || '');
+    var key = Object.keys(ERRORS).filter(function (k) { return msg.indexOf(k) !== -1; })[0];
+    var text = key ? ERRORS[key] : ['Something went wrong. Check the internet and try again.', 'कुछ गड़बड़ हुई। इंटरनेट देखकर फिर से कोशिश करें।'];
+    toast(text[0], text[1], true);
+    if (key === 'AUTH') signOut(true);
+  }
+
+  // google.script.run as a promise; adds the session token as the first argument.
+  function api(fn) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    return new Promise(function (resolve, reject) {
+      var runner = google.script.run.withSuccessHandler(resolve).withFailureHandler(reject);
+      runner[fn].apply(runner, [state.token].concat(args));
+    });
+  }
+
+  // ---------- login ----------
+  function renderLogin() {
+    state.view = 'login';
+    app.innerHTML =
+      '<header class="top"><h1>' + L('AnjaniPutra Admin', 'एडमिन') + '</h1></header>' +
+      '<main><form class="login card stack" id="loginForm">' +
+      '<h2>' + L('Enter your PIN', 'अपना पिन डालें') + '</h2>' +
+      '<input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="12" aria-label="PIN">' +
+      '<button class="btn primary" type="submit">' + L('Open', 'खोलें') + '</button>' +
+      '<p class="muted">' + L('You will stay logged in on this phone.', 'इस फ़ोन पर आप लॉग इन रहेंगे।') + '</p>' +
+      '</form></main>';
+    $('#pin').focus();
+    $('#loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var pin = $('#pin').value;
+      if (!pin) return;
+      busy('Checking…', 'जाँच हो रही है…');
+      google.script.run
+        .withSuccessHandler(function (token) {
+          busy();
+          state.token = token;
+          store(TOKEN_KEY, token);
+          loadListings();
+        })
+        .withFailureHandler(function (err) { busy(); $('#pin').value = ''; showError(err); })
+        .login(pin);
+    });
+  }
+
+  function signOut(silent) {
+    var token = state.token;
+    state.token = null;
+    store(TOKEN_KEY, null);
+    if (token && !silent) google.script.run.logout(token);
+    renderLogin();
+  }
+
+  // ---------- shell ----------
+  function header(titleEn, titleHi, backAction) {
+    return '<header class="top">' +
+      (backAction ? '<button type="button" data-nav="' + backAction + '">‹ ' + L('Back', 'वापस') + '</button>' : '') +
+      '<h1>' + L(titleEn, titleHi) + '</h1>' +
+      (backAction ? '' : '<button type="button" data-nav="logout">' + L('Log out', 'लॉग आउट') + '</button>') +
+      '</header>';
+  }
+
+  function tabs(active) {
+    return '<div class="tabs">' +
+      '<button type="button" data-nav="list" class="' + (active === 'list' ? 'on' : '') + '">' + L('My listings', 'मेरी लिस्टिंग') + '</button>' +
+      '<button type="button" data-nav="leads" class="' + (active === 'leads' ? 'on' : '') + '">' + L('Enquiries', 'पूछताछ') + '</button>' +
+      '</div>';
+  }
+
+  app.addEventListener('click', function (e) {
+    var nav = e.target.closest('[data-nav]');
+    if (!nav) return;
+    var where = nav.getAttribute('data-nav');
+    if (where === 'logout') {
+      ask('Log out?', 'लॉग आउट करें?', 'You will need your PIN to come back.', 'वापस आने के लिए पिन चाहिए होगा।', 'Log out', 'लॉग आउट')
+        .then(function (ok) { if (ok) signOut(); });
+    } else if (where === 'list') {
+      leaveForm().then(function (ok) { if (ok) loadListings(); });
+    } else if (where === 'leads') {
+      loadLeads();
+    }
+  });
+
+  // ---------- listings ----------
+  function loadListings() {
+    busy('Loading your plots…', 'आपके प्लॉट लोड हो रहे हैं…');
+    api('listListings').then(function (res) {
+      busy();
+      state.listings = res.listings || [];
+      state.siteUrl = res.siteUrl || '';
+      renderList();
+    }).catch(function (err) { busy(); showError(err); });
+  }
+
+  function availabilityPill(a) {
+    var pair = AVAILABILITY.filter(function (x) { return x[0] === a; })[0] || [a, ''];
+    return '<span class="pill ' + esc(String(a).split(' ')[0]) + '">' + esc(pair[0]) + (pair[1] ? ' · ' + esc(pair[1]) : '') + '</span>';
+  }
+
+  function renderList() {
+    state.view = 'list';
+    window.scrollTo(0, 0);
+    var items = state.listings.map(function (p) {
+      var first = (p.media || []).filter(function (m) { return m.type === 'image'; })[0];
+      var url = first ? photoUrl(first.src, 300) : '';
+      var hidden = p.availability === 'Hidden';
+      return '<div class="card listing">' +
+        (url ? '<img src="' + esc(url) + '" alt="" loading="lazy">' : '<div class="noimg">🏞️</div>') +
+        '<div><h3>' + esc(p.title) + '</h3>' +
+        '<div class="meta">📍 ' + esc(p.location) + ' · ' + esc(p.id) + '</div>' +
+        '<span class="pill kind">' + (p.category === 'Flat' ? esc((p.bhk ? p.bhk + ' BHK ' : '') + 'Flat · फ़्लैट') : 'Plot · प्लॉट') + '</span>' +
+        availabilityPill(p.availability) + '</div>' +
+        '<div class="actions row3">' +
+        '<button class="btn small dark" data-edit="' + esc(p.id) + '">' + L('Edit', 'बदलें') + '</button>' +
+        '<button class="btn small" data-toggle="' + esc(p.id) + '">' + (hidden ? L('Show', 'दिखाएँ') : L('Hide', 'छुपाएँ')) + '</button>' +
+        '<button class="btn small danger" data-delete="' + esc(p.id) + '">' + L('Delete', 'हटाएँ') + '</button>' +
+        '</div></div>';
+    }).join('');
+
+    app.innerHTML = header('My listings', 'मेरी लिस्टिंग') +
+      '<main>' + tabs('list') +
+      '<div class="row2" style="margin-bottom:16px">' +
+      '<button class="btn primary" data-new="Plot">＋ ' + L('Add plot', 'प्लॉट जोड़ें') + '</button>' +
+      '<button class="btn primary" data-new="Flat">＋ ' + L('Add flat', 'फ़्लैट जोड़ें') + '</button></div>' +
+      (items || '<div class="card empty">' + L('Nothing added yet. Tap “Add plot” or “Add flat” to start.', 'अभी कुछ नहीं जोड़ा गया। “प्लॉट जोड़ें” या “फ़्लैट जोड़ें” दबाएँ।') + '</div>') +
+      (state.siteUrl ? '<a class="btn" href="' + esc(state.siteUrl) + '" target="_blank" rel="noopener">' + L('Open website', 'वेबसाइट खोलें') + '</a>' : '') +
+      '</main>';
+
+    $$('[data-new]').forEach(function (b) { b.addEventListener('click', function () { openForm(null, b.getAttribute('data-new')); }); });
+    $$('[data-edit]').forEach(function (b) { b.addEventListener('click', function () { openForm(b.getAttribute('data-edit')); }); });
+    $$('[data-toggle]').forEach(function (b) { b.addEventListener('click', function () { toggleHidden(b.getAttribute('data-toggle')); }); });
+    $$('[data-delete]').forEach(function (b) { b.addEventListener('click', function () { removeListing(b.getAttribute('data-delete')); }); });
+  }
+
+  function findListing(id) { return state.listings.filter(function (p) { return p.id === id; })[0]; }
+
+  function toggleHidden(id) {
+    var p = findListing(id);
+    if (!p) return;
+    var next = p.availability === 'Hidden' ? 'Available' : 'Hidden';
+    busy('Saving…', 'सेव हो रहा है…');
+    api('setAvailability', id, next).then(function () {
+      busy();
+      p.availability = next;
+      renderList();
+      if (next === 'Hidden') toast('Hidden from the website.', 'वेबसाइट से छुपा दिया गया।');
+      else toast('Now showing on the website.', 'अब वेबसाइट पर दिख रहा है।');
+    }).catch(function (err) { busy(); showError(err); });
+  }
+
+  function removeListing(id) {
+    var p = findListing(id);
+    if (!p) return;
+    ask('Delete this listing?', 'क्या यह लिस्टिंग हटानी है?',
+      '“' + p.title + '” and its photos will be removed. Tip: use Hide if you may show it again.',
+      'यह लिस्टिंग और इसकी फ़ोटो हट जाएँगी। अगर बाद में फिर दिखाना हो तो “छुपाएँ” दबाएँ।',
+      'Yes, delete', 'हाँ, हटाएँ', true)
+      .then(function (ok) {
+        if (!ok) return;
+        busy('Deleting…', 'हटाया जा रहा है…');
+        api('deleteListing', id).then(function () {
+          busy();
+          state.listings = state.listings.filter(function (x) { return x.id !== id; });
+          renderList();
+          toast('Deleted.', 'हटा दिया गया।');
+        }).catch(function (err) { busy(); showError(err); });
+      });
+  }
+
+  // ---------- add / edit form ----------
+  function blankListing(category) {
+    var flat = category === 'Flat';
+    return {
+      id: '', category: flat ? 'Flat' : 'Plot', title: '', location: '', plotType: 'Villa Plots',
+      bhk: '2', floor: '', totalFloors: '', carpetArea: '', price: '', priceUnit: 'L',
+      status: flat ? 'Ready to move' : 'Under development', possession: '',
+      landParcel: '', totalPlots: '', plotOptions: [{ name: '', size: '', price: '', unit: 'L' }],
+      amenities: [], highlights: '', connectivity: [{ place: '', distance: '' }], approvals: flat ? '' : DEFAULT_APPROVALS,
+      availability: 'Available', media: [], youtube: '', description: '', featured: false,
+      private: { projectName: '', reraNumber: '', developerContact: '', notes: '' }
+    };
+  }
+
+  function openForm(id, category) {
+    var source = id ? findListing(id) : blankListing(category);
+    state.draft = JSON.parse(JSON.stringify(source));
+    if (!state.draft.plotOptions.length && state.draft.category !== 'Flat') state.draft.plotOptions.push({ name: '', size: '', price: '', unit: 'L' });
+    if (!state.draft.connectivity.length) state.draft.connectivity.push({ place: '', distance: '' });
+    state.dirty = false;
+    state.newUploads = [];
+    renderForm();
+    window.scrollTo(0, 0);
+  }
+
+  function options(list, value) {
+    var known = list.some(function (x) { return x[0] === value; });
+    return (known || !value ? '' : '<option value="' + esc(value) + '" selected>' + esc(value) + '</option>') +
+      list.map(function (x) { return '<option value="' + esc(x[0]) + '"' + (x[0] === value ? ' selected' : '') + '>' + esc(x[0]) + ' · ' + esc(x[1]) + '</option>'; }).join('');
+  }
+
+  function field(name, en, hi, value, opts) {
+    opts = opts || {};
+    return '<label class="f" for="f_' + name + '">' + L(en, hi) + '</label>' +
+      (opts.hint ? '<div class="hint">' + esc(opts.hint) + '</div>' : '') +
+      (opts.textarea
+        ? '<textarea id="f_' + name + '" data-f="' + name + '" rows="' + (opts.rows || 4) + '">' + esc(value) + '</textarea>'
+        : '<input id="f_' + name + '" data-f="' + name + '" type="' + (opts.type || 'text') + '"' + (opts.inputmode ? ' inputmode="' + opts.inputmode + '"' : '') + ' value="' + esc(value) + '"' + (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') + '>');
+  }
+
+  function renderPhotos() {
+    var d = state.draft;
+    return d.media.map(function (m, i) {
+      var url = m.type === 'image' ? photoUrl(m.src, 500) : '';
+      return '<div class="photo">' +
+        (url ? '<img src="' + esc(url) + '" alt="">' : '<div class="file">' + (m.type === 'video' ? '🎬 ' : '') + esc(m.src) + '</div>') +
+        (i === 0 ? '<span class="main">★ Main · मुख्य</span>' : '') +
+        '<div class="tools">' +
+        (i > 0 ? '<button type="button" data-main="' + i + '">★ Main · मुख्य</button>' : '<span style="flex:1"></span>') +
+        '<button type="button" class="x" data-rmphoto="' + i + '" aria-label="Remove photo">✕</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  function priceUnitSelect(attr, unit) {
+    return '<select ' + attr + '>' +
+      '<option value="L"' + (unit === 'L' ? ' selected' : '') + '>Lakh · लाख</option>' +
+      '<option value="Cr"' + (unit === 'Cr' ? ' selected' : '') + '>Crore · करोड़</option>' +
+      '<option value="request"' + (unit === 'request' ? ' selected' : '') + '>On request · पूछने पर</option>' +
+      '</select>';
+  }
+
+  function renderForm() {
+    state.view = 'form';
+    var d = state.draft;
+    var flat = d.category === 'Flat';
+    var checkList = flat ? FACILITIES : AMENITIES;
+    var otherAmenities = d.amenities.filter(function (a) { return !checkList.some(function (x) { return x[0] === a; }); });
+    var n = 0;
+    function legend(en, hi) { n++; return '<legend>' + L(n + '. ' + en, n + '. ' + hi) + '</legend>'; }
+
+    var titleEn = flat ? (d.id ? 'Edit flat ' + d.id : 'Add new flat') : (d.id ? 'Edit plot ' + d.id : 'Add new plot');
+    var titleHi = flat ? (d.id ? 'फ़्लैट बदलें' : 'नया फ़्लैट जोड़ें') : (d.id ? 'प्लॉट बदलें' : 'नया प्लॉट जोड़ें');
+
+    var basics = flat
+      ? field('title', 'Title shown on website *', 'वेबसाइट पर दिखने वाला शीर्षक *', d.title, { hint: 'Example: 2 BHK near Panvel Station. Do not write the building name.' }) +
+        field('location', 'Area / location *', 'एरिया / जगह *', d.location, { hint: 'Example: Kharghar' }) +
+        '<label class="f" for="f_bhk">' + L('Flat type', 'फ़्लैट का प्रकार') + '</label>' +
+        '<select id="f_bhk" data-f="bhk">' + FLAT_TYPES.map(function (x) { return '<option value="' + x[0] + '"' + (String(d.bhk) === x[0] ? ' selected' : '') + '>' + x[1] + '</option>'; }).join('') + '</select>' +
+        '<div class="row2"><div>' + field('floor', 'Floor', 'मंज़िल', d.floor, { placeholder: '7 or Ground' }) + '</div>' +
+        '<div>' + field('totalFloors', 'Total floors', 'कुल मंज़िलें', d.totalFloors, { inputmode: 'numeric', placeholder: '12' }) + '</div></div>' +
+        field('carpetArea', 'Carpet area (sq ft)', 'कारपेट एरिया (वर्ग फ़ुट)', d.carpetArea, { type: 'number', inputmode: 'decimal', placeholder: '650' }) +
+        '<label class="f" for="f_price">' + L('Price', 'कीमत') + '</label>' +
+        '<div class="row2"><input id="f_price" data-f="price" type="number" inputmode="decimal" step="any" value="' + esc(d.price) + '" placeholder="85"' + (d.priceUnit === 'request' ? ' disabled' : '') + '>' +
+        priceUnitSelect('id="f_priceUnit" data-f="priceUnit"', d.priceUnit || 'L') + '</div>' +
+        '<label class="f" for="f_status">' + L('Status', 'स्थिति') + '</label>' +
+        '<select id="f_status" data-f="status">' + options(FLAT_STATUSES, d.status) + '</select>' +
+        field('possession', 'Possession', 'पज़ेशन', d.possession, { placeholder: 'Immediate / Dec 2027' })
+      : field('title', 'Title shown on website *', 'वेबसाइट पर दिखने वाला शीर्षक *', d.title, { hint: 'Example: Gated Villa Plots near Mumbai–Pune Expressway. Do not write the project name.' }) +
+        field('location', 'Location *', 'जगह *', d.location, { hint: 'Example: Khalapur, Khopoli' }) +
+        '<label class="f" for="f_plotType">' + L('Plot type', 'प्लॉट का प्रकार') + '</label>' +
+        '<select id="f_plotType" data-f="plotType">' + options(PLOT_TYPES, d.plotType) + '</select>' +
+        '<label class="f" for="f_status">' + L('Project status', 'प्रोजेक्ट की स्थिति') + '</label>' +
+        '<select id="f_status" data-f="status">' + options(STATUSES, d.status) + '</select>' +
+        '<div class="row2"><div>' + field('possession', 'Possession', 'पज़ेशन', d.possession, { placeholder: 'Sep 2027' }) + '</div>' +
+        '<div>' + field('landParcel', 'Total land', 'कुल ज़मीन', d.landParcel, { placeholder: '18 acres' }) + '</div></div>' +
+        field('totalPlots', 'Total plots in project (optional)', 'प्रोजेक्ट में कुल प्लॉट', d.totalPlots, { inputmode: 'numeric' });
+
+    var plotSizes = flat ? '' :
+      '<fieldset>' + legend('Plot sizes & prices', 'प्लॉट साइज़ और कीमत') +
+      '<div id="optionRows">' + d.plotOptions.map(function (o, i) {
+        return '<div class="repeat" data-option-row="' + i + '">' +
+          '<div class="row-title">' + L('Size ' + (i + 1), 'साइज़ ' + (i + 1)) + '</div>' +
+          (d.plotOptions.length > 1 ? '<button type="button" class="remove" data-rmoption="' + i + '" aria-label="Remove">✕</button>' : '') +
+          '<label class="f">' + L('Name (optional)', 'नाम (अगर हो)') + '</label>' +
+          '<input type="text" data-o="name" value="' + esc(o.name) + '" placeholder="Prime / Corner / Large">' +
+          '<label class="f">' + L('Size in sq ft', 'साइज़ (वर्ग फ़ुट)') + '</label>' +
+          '<input type="number" inputmode="decimal" data-o="size" value="' + esc(o.size) + '" placeholder="1650">' +
+          '<label class="f">' + L('Price', 'कीमत') + '</label>' +
+          '<div class="row2"><input type="number" inputmode="decimal" step="any" data-o="price" value="' + esc(o.price) + '" placeholder="99"' + (o.unit === 'request' ? ' disabled' : '') + '>' +
+          priceUnitSelect('data-o="unit"', o.unit) + '</div></div>';
+      }).join('') + '</div>' +
+      '<button type="button" class="btn" data-addoption>＋ ' + L('Add another size', 'एक और साइज़ जोड़ें') + '</button>' +
+      '</fieldset>';
+
+    app.innerHTML = header(titleEn, titleHi, 'list') +
+      '<main><form id="plotForm" novalidate>' +
+
+      '<fieldset>' + legend('Photos', 'फ़ोटो') +
+      '<div class="hint">' + esc('The first photo is shown first on the website. पहली फ़ोटो वेबसाइट पर सबसे पहले दिखेगी।') + '</div>' +
+      '<div class="photos" id="photoGrid">' + renderPhotos() + '</div>' +
+      '<label class="btn dark upload">📷 ' + L('Add photos', 'फ़ोटो जोड़ें') + '<input id="photoInput" type="file" accept="image/*" multiple></label>' +
+      field('youtube', 'YouTube video link (optional)', 'यूट्यूब वीडियो लिंक (अगर हो)', d.youtube, { type: 'url', placeholder: 'https://youtu.be/…' }) +
+      '</fieldset>' +
+
+      '<fieldset>' + legend('Basic details', 'मुख्य जानकारी') + basics + '</fieldset>' +
+
+      plotSizes +
+
+      '<fieldset>' + (flat ? legend('Facilities', 'सुविधाएँ') : legend('Amenities', 'सुविधाएँ')) +
+      '<div class="checks">' + checkList.map(function (a) {
+        return '<label><input type="checkbox" data-amenity value="' + esc(a[0]) + '"' + (d.amenities.indexOf(a[0]) >= 0 ? ' checked' : '') + '><span>' + L(a[0], a[1]) + '</span></label>';
+      }).join('') + '</div>' +
+      field('otherAmenities', flat ? 'Other facilities' : 'Other amenities', 'अन्य सुविधाएँ', otherAmenities.join(', '), { hint: 'Separate with commas. कॉमा लगाकर लिखें।' }) +
+      (flat
+        ? field('highlights', 'Features of the flat', 'फ़्लैट की खूबियाँ', d.highlights, { hint: 'Example: East facing, Vastu compliant, Modular kitchen, Balcony. कॉमा लगाकर लिखें।' })
+        : field('highlights', 'Highlights', 'खास बातें', d.highlights, { hint: 'Example: Clear title, Vastu layout, Corner plots' })) +
+      '</fieldset>' +
+
+      '<fieldset>' + legend('Nearby places', 'आसपास की जगहें') +
+      '<div id="connectRows">' + d.connectivity.map(function (c, i) {
+        return '<div class="repeat" data-connect-row="' + i + '">' +
+          (d.connectivity.length > 1 ? '<button type="button" class="remove" data-rmconnect="' + i + '" aria-label="Remove">✕</button>' : '') +
+          '<label class="f">' + L('Place', 'जगह') + '</label>' +
+          '<input type="text" data-c="place" value="' + esc(c.place) + '" placeholder="' + (flat ? 'Railway station' : 'Khopoli Railway Station') + '">' +
+          '<label class="f">' + L('Distance / time', 'दूरी / समय') + '</label>' +
+          '<input type="text" data-c="distance" value="' + esc(c.distance) + '" placeholder="6.5 km · 12 min">' +
+          '</div>';
+      }).join('') + '</div>' +
+      '<button type="button" class="btn" data-addconnect>＋ ' + L('Add another place', 'एक और जगह जोड़ें') + '</button>' +
+      '</fieldset>' +
+
+      '<fieldset>' + legend('Description', 'विवरण') +
+      field('description', flat ? 'About this flat' : 'About this plot', flat ? 'इस फ़्लैट के बारे में' : 'इस प्लॉट के बारे में', d.description, { textarea: true, rows: 5 }) +
+      field('approvals', flat ? 'Approvals / OC (optional)' : 'Approvals text', 'मंज़ूरी की जानकारी', d.approvals) +
+      '</fieldset>' +
+
+      '<fieldset>' + legend('Show on website', 'वेबसाइट पर दिखाना') +
+      '<div class="avail">' + AVAILABILITY.map(function (a) {
+        return '<label><input type="radio" name="availability" value="' + esc(a[0]) + '"' + (d.availability === a[0] ? ' checked' : '') + '>' + L(a[0], a[1]) + '</label>';
+      }).join('') + '</div>' +
+      '<label class="switch"><input type="checkbox" id="f_featured"' + (d.featured ? ' checked' : '') + '><span>' + L('Show at the top', 'सबसे ऊपर दिखाएँ') + '</span></label>' +
+      '</fieldset>' +
+
+      '<fieldset class="private"><legend>🔒 ' + L('Private — not shown on website', 'निजी — वेबसाइट पर नहीं दिखेगा') + '</legend>' +
+      field('p_projectName', flat ? 'Building / project name' : 'Project name', flat ? 'बिल्डिंग / प्रोजेक्ट का नाम' : 'प्रोजेक्ट का नाम', d.private.projectName) +
+      field('p_reraNumber', 'RERA number', 'रेरा नंबर', d.private.reraNumber) +
+      field('p_developerContact', flat ? 'Owner / developer contact' : 'Developer contact', flat ? 'मालिक / डेवलपर संपर्क' : 'डेवलपर संपर्क', d.private.developerContact) +
+      field('p_notes', 'Notes', 'नोट्स', d.private.notes, { textarea: true, rows: 3 }) +
+      '</fieldset>' +
+
+      '</form></main>' +
+      '<div class="savebar"><button type="button" class="btn" data-nav="list">' + L('Cancel', 'रद्द करें') + '</button>' +
+      '<button type="button" class="btn primary" id="saveBtn">' + L('Save', 'सेव करें') + '</button></div>';
+
+    bindForm();
+  }
+
+  // Copies what is on screen into state.draft (so sections can be re-rendered without losing typing).
+  function collectForm() {
+    var d = state.draft;
+    var form = $('#plotForm');
+    if (!form) return d;
+    $$('[data-f]', form).forEach(function (el) {
+      var key = el.getAttribute('data-f');
+      if (key.indexOf('p_') === 0) d.private[key.slice(2)] = el.value;
+      else if (key !== 'otherAmenities') d[key] = el.value;
+    });
+    d.plotOptions = $$('[data-option-row]', form).map(function (row) {
+      return {
+        name: $('[data-o="name"]', row).value, size: $('[data-o="size"]', row).value,
+        price: $('[data-o="price"]', row).value, unit: $('[data-o="unit"]', row).value
+      };
+    });
+    d.connectivity = $$('[data-connect-row]', form).map(function (row) {
+      return { place: $('[data-c="place"]', row).value, distance: $('[data-c="distance"]', row).value };
+    });
+    var other = ($('#f_otherAmenities').value || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+    d.amenities = $$('[data-amenity]', form).filter(function (c) { return c.checked; }).map(function (c) { return c.value; }).concat(other);
+    var avail = $('input[name="availability"]:checked', form);
+    d.availability = avail ? avail.value : 'Available';
+    d.featured = $('#f_featured').checked;
+    return d;
+  }
+
+  // Callers run collectForm() before changing state.draft, so on-screen typing is never lost.
+  function rerender() {
+    var y = window.scrollY;
+    renderForm();
+    window.scrollTo(0, y);
+  }
+
+  function bindForm() {
+    var form = $('#plotForm');
+    form.addEventListener('input', function () { state.dirty = true; });
+    form.addEventListener('change', function (e) {
+      state.dirty = true;
+      if (e.target.id === 'f_priceUnit') $('#f_price').disabled = e.target.value === 'request';
+      if (e.target.matches('[data-o="unit"]')) {
+        var price = e.target.closest('.row2').querySelector('[data-o="price"]');
+        price.disabled = e.target.value === 'request';
+      }
+    });
+    var addOption = $('[data-addoption]');
+    if (addOption) addOption.addEventListener('click', function () { collectForm(); state.draft.plotOptions.push({ name: '', size: '', price: '', unit: 'L' }); state.dirty = true; rerender(); });
+    $('[data-addconnect]').addEventListener('click', function () { collectForm(); state.draft.connectivity.push({ place: '', distance: '' }); state.dirty = true; rerender(); });
+    $$('[data-rmoption]').forEach(function (b) { b.addEventListener('click', function () { collectForm(); state.draft.plotOptions.splice(+b.getAttribute('data-rmoption'), 1); state.dirty = true; rerender(); }); });
+    $$('[data-rmconnect]').forEach(function (b) { b.addEventListener('click', function () { collectForm(); state.draft.connectivity.splice(+b.getAttribute('data-rmconnect'), 1); state.dirty = true; rerender(); }); });
+    $('#photoGrid').addEventListener('click', function (e) {
+      var main = e.target.closest('[data-main]');
+      var rm = e.target.closest('[data-rmphoto]');
+      if (main) {
+        collectForm();
+        var item = state.draft.media.splice(+main.getAttribute('data-main'), 1)[0];
+        state.draft.media.unshift(item);
+        state.dirty = true;
+        rerender();
+      } else if (rm) {
+        ask('Remove this photo?', 'यह फ़ोटो हटाएँ?', '', '', 'Remove', 'हटाएँ', true).then(function (ok) {
+          if (!ok) return;
+          collectForm();
+          state.draft.media.splice(+rm.getAttribute('data-rmphoto'), 1);
+          state.dirty = true;
+          rerender();
+        });
+      }
+    });
+    $('#photoInput').addEventListener('change', function (e) { uploadFiles(Array.prototype.slice.call(e.target.files || [])); e.target.value = ''; });
+    $('#saveBtn').addEventListener('click', saveForm);
+  }
+
+  // Shrinks phone photos (often 4–8 MB) to ~1600px JPEGs before upload.
+  function resizeImage(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onerror = function () { reject(new Error('BAD_IMAGE')); };
+      reader.onload = function () {
+        var img = new Image();
+        img.onerror = function () { reject(new Error('BAD_IMAGE')); };
+        img.onload = function () {
+          var max = 1600;
+          var scale = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.naturalWidth * scale);
+          canvas.height = Math.round(img.naturalHeight * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function uploadFiles(files) {
+    if (!files.length) return;
+    collectForm();
+    var done = 0;
+    var failed = 0;
+    var next = function () {
+      if (done + failed >= files.length) {
+        busy();
+        rerender();
+        if (failed) toast(failed + ' photo(s) could not be added.', failed + ' फ़ोटो नहीं जुड़ पाईं।', true);
+        else toast('Photos added. Remember to Save.', 'फ़ोटो जुड़ गईं। अब “सेव करें” दबाएँ।');
+        return;
+      }
+      var file = files[done + failed];
+      busy('Uploading photo ' + (done + failed + 1) + ' of ' + files.length + '…', 'फ़ोटो ' + (done + failed + 1) + ' / ' + files.length + ' अपलोड हो रही है…');
+      resizeImage(file)
+        .then(function (dataUrl) { return api('uploadPhoto', dataUrl); })
+        .then(function (id) {
+          state.draft.media.push({ type: 'image', src: 'drive:' + id });
+          state.newUploads.push(id);
+          state.dirty = true;
+          done++;
+          next();
+        })
+        .catch(function () { failed++; next(); });
+    };
+    next();
+  }
+
+  function saveForm() {
+    var d = collectForm();
+    var missing = [];
+    ['title', 'location'].forEach(function (k) {
+      var el = $('#f_' + k);
+      var bad = !String(d[k] || '').trim();
+      el.classList.toggle('invalid', bad);
+      if (bad) missing.push(el);
+    });
+    if (missing.length) {
+      missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      toast('Please fill the title and location.', 'कृपया शीर्षक और जगह भरें।', true);
+      return;
+    }
+    busy('Saving…', 'सेव हो रहा है…');
+    api('saveListing', d).then(function (id) {
+      busy();
+      state.dirty = false;
+      state.newUploads = [];
+      toast('Saved! The website updates within a few minutes.', 'सेव हो गया! वेबसाइट कुछ मिनट में अपडेट हो जाएगी।');
+      loadListings();
+    }).catch(function (err) { busy(); showError(err); });
+  }
+
+  // Resolves true when it is OK to leave the form.
+  function leaveForm() {
+    if (state.view !== 'form' || !state.dirty) {
+      discardNewUploads();
+      return Promise.resolve(true);
+    }
+    return ask('Leave without saving?', 'बिना सेव किए बाहर जाएँ?',
+      'Your changes to this plot will be lost.', 'इस प्लॉट में किए बदलाव मिट जाएँगे।', 'Leave', 'बाहर जाएँ', true)
+      .then(function (ok) { if (ok) discardNewUploads(); return ok; });
+  }
+
+  function discardNewUploads() {
+    if (state.newUploads.length) api('discardPhotos', state.newUploads).catch(function () {});
+    state.newUploads = [];
+  }
+
+  // ---------- enquiries ----------
+  function loadLeads() {
+    leaveForm().then(function (ok) {
+      if (!ok) return;
+      busy('Loading enquiries…', 'पूछताछ लोड हो रही है…');
+      api('listLeads').then(function (res) {
+        busy();
+        state.leads = res.leads || [];
+        state.leadStatuses = res.statuses || [];
+        renderLeads();
+      }).catch(function (err) { busy(); showError(err); });
+    });
+  }
+
+  var STATUS_HI = { 'New': 'नई', 'Contacted': 'बात हो गई', 'Visit booked': 'विज़िट तय', 'Visited': 'विज़िट हो गई', 'Booked': 'बुकिंग हो गई', 'Not interested': 'रुचि नहीं' };
+
+  function renderLeads() {
+    state.view = 'leads';
+    window.scrollTo(0, 0);
+    var items = state.leads.map(function (l, i) {
+      var digits = String(l.phone || '').replace(/\D/g, '');
+      var wa = digits.length === 10 ? '91' + digits : digits;
+      return '<div class="card lead' + (l.status === 'New' ? ' new' : '') + '">' +
+        '<h3>' + esc(l.name || 'No name') + '</h3>' +
+        '<div class="meta">' + esc(l.time) + ' · ' + esc(l.phone) + '</div>' +
+        (l.type ? '<div class="detail"><strong>' + esc(l.type) + '</strong>' + (l.visitDate ? ' — ' + esc(l.visitDate) + ' ' + esc(l.visitTime) : '') + '</div>' : '') +
+        (l.listing ? '<div class="detail">🏞️ ' + esc(l.listing) + (l.plotOption ? ' · ' + esc(l.plotOption) : '') + '</div>' : '') +
+        (l.budget ? '<div class="detail">💰 ' + esc(l.budget) + '</div>' : '') +
+        (l.message ? '<div class="detail">💬 ' + esc(l.message) + '</div>' : '') +
+        '<div class="row2" style="margin:10px 0">' +
+        '<a class="btn small dark" href="tel:' + esc(l.phone) + '">📞 ' + L('Call', 'कॉल') + '</a>' +
+        '<a class="btn small" target="_blank" rel="noopener" href="https://wa.me/' + esc(wa) + '?text=' + encodeURIComponent('Namaste ' + (l.name || '') + ', this is AnjaniPutra Properties regarding your plot enquiry.') + '">' + L('WhatsApp', 'व्हाट्सऐप') + '</a>' +
+        '</div>' +
+        '<label class="f" style="margin-top:4px">' + L('Status', 'स्थिति') + '</label>' +
+        '<select data-lead="' + i + '">' + state.leadStatuses.map(function (s) {
+          return '<option value="' + esc(s) + '"' + (s === l.status ? ' selected' : '') + '>' + esc(s) + (STATUS_HI[s] ? ' · ' + esc(STATUS_HI[s]) : '') + '</option>';
+        }).join('') + '</select>' +
+        '</div>';
+    }).join('');
+
+    app.innerHTML = header('Enquiries', 'पूछताछ') +
+      '<main>' + tabs('leads') +
+      '<button class="btn" data-nav="leads" style="margin-bottom:16px">⟳ ' + L('Refresh', 'रीफ़्रेश करें') + '</button>' +
+      (items || '<div class="card empty">' + L('No enquiries yet.', 'अभी कोई पूछताछ नहीं है।') + '</div>') +
+      '</main>';
+
+    $$('[data-lead]').forEach(function (sel) {
+      sel.addEventListener('change', function () {
+        var lead = state.leads[+sel.getAttribute('data-lead')];
+        var previous = lead.status;
+        api('setLeadStatus', lead.row, sel.value, lead.phone).then(function () {
+          lead.status = sel.value;
+          sel.closest('.lead').classList.toggle('new', sel.value === 'New');
+          toast('Status saved.', 'स्थिति सेव हो गई।');
+        }).catch(function (err) { sel.value = previous; showError(err); });
+      });
+    });
+  }
+
+  // ---------- boot ----------
+  window.addEventListener('beforeunload', function (e) {
+    if (state.view === 'form' && state.dirty) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  state.token = load(TOKEN_KEY);
+  if (state.token) loadListings(); else renderLogin();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160">
+  <style>.navy{fill:#14213D}.gold{fill:#F2A900}</style>
+  <rect width="160" height="160" fill="#FFFFFF"/>
+  <g transform="translate(36,30)">
+    <rect x="0" y="20" width="28" height="64" rx="2" class="navy"/>
+    <rect x="34" y="10" width="28" height="74" rx="2" class="gold"/>
+    <rect x="68" y="28" width="28" height="56" rx="2" class="navy"/>
+  </g>
+</svg>
