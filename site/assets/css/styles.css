@@ -288,3 +288,35 @@ footer{background:var(--navy);color:#fff;padding:36px 0 60px;border-top:1px soli
 .mobile-bottom-bar .btn-bottom-call{flex:1;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:9px 6px;font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
 .mobile-bottom-bar .btn-bottom-wa{flex:1;background:#25D366;color:#fff;border-radius:8px;padding:9px 6px;font-size:13px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
 .mobile-bottom-bar .btn-bottom-visit{flex:1.3;background:var(--gold);color:var(--navy);border-radius:8px;padding:9px 6px;font-size:13px;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+
+/* Plot EMI & Cost Estimator */
+.calc-section{background:#fff;border-radius:20px;padding:36px 24px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.05);margin:40px 0}
+.calc-grid{display:grid;grid-template-columns:1fr;gap:28px}
+@media(min-width:960px){.calc-grid{grid-template-columns:1.2fr 1fr}}
+.calc-input-group{margin-bottom:18px}
+.calc-input-group label{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.calc-input-group .calc-badge{color:var(--gold);font-weight:700}
+.calc-slider{width:100%;height:6px;border-radius:999px;background:#e2e8f0;outline:none;-webkit-appearance:none;cursor:pointer}
+.calc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--gold);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.calc-result-box{background:linear-gradient(135deg,#0d1b2a 0%,#1b263b 100%);color:#fff;border-radius:16px;padding:26px;display:flex;flex-direction:column;justify-content:space-between}
+.calc-res-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:14px}
+.calc-res-item.highlight{border-bottom:none;padding-top:16px}
+.calc-res-item.highlight strong{font-size:24px;color:var(--gold)}
+
+/* FAQ Accordion */
+.faq-section{margin:40px 0}
+.faq-list{display:flex;flex-direction:column;gap:12px;margin-top:20px}
+.faq-item{background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color .2s}
+.faq-item:hover{border-color:var(--gold)}
+.faq-q{padding:16px 20px;cursor:pointer;font-weight:600;color:var(--navy);display:flex;justify-content:space-between;align-items:center;font-size:15px;user-select:none}
+.faq-q::after{content:"+";font-size:20px;font-weight:bold;color:var(--gold);transition:transform .2s}
+.faq-item.open .faq-q::after{content:"−";transform:rotate(180deg)}
+.faq-a{display:none;padding:0 20px 18px;font-size:14px;line-height:1.65;color:var(--text-muted);border-top:1px solid #f1f5f9;padding-top:14px}
+.faq-item.open .faq-a{display:block}
+
+/* Desktop Floating WhatsApp Pulse Button */
+.wa-float-btn{position:fixed;bottom:24px;right:24px;background:#25D366;color:#fff;width:56px;height:56px;border-radius:50%;display:none;place-items:center;font-size:28px;text-decoration:none;box-shadow:0 8px 24px rgba(37,211,102,.4);z-index:3000;transition:all .3s ease}
+@media(min-width:768px){.wa-float-btn{display:grid}}
+.wa-float-btn:hover{transform:scale(1.08);box-shadow:0 12px 30px rgba(37,211,102,.6)}
+.wa-float-btn::before{content:"";position:absolute;inset:-4px;border-radius:50%;background:#25D366;opacity:.4;animation:pulseWa 2s infinite}
+@keyframes pulseWa{0%{transform:scale(1);opacity:.4}70%{transform:scale(1.25);opacity:0}100%{transform:scale(1.3);opacity:0}}

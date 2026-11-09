@@ -1,0 +1,45 @@
+# Netlify configuration for AnjaniPutra Properties
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # The directory containing the static files to publish
+  publish = "site"
+
+# Optional security and performance headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Immutable caching for static assets (images, CSS, JS, documents)
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Direct redirect for agent admin panel
+[[redirects]]
+  from = "/admin"
+  to = "https://script.google.com/macros/s/AKfycbzXzpmMhHXtO03wj_y_rt177tn6ojuuGHRlJhZeltVDMBV0ZfRVPfqxVixiLjJUBS54OA/exec"
+  status = 302
+  force = true
+
+# Pretty URL redirects for sub-pages
+[[redirects]]
+  from = "/plots-in-panvel"
+  to = "/plots-in-panvel/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/plots-in-khalapur-khopoli"
+  to = "/plots-in-khalapur-khopoli/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/privacy"
+  to = "/privacy/index.html"
+  status = 200
+
