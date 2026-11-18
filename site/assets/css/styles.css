@@ -950,7 +950,8 @@ body.js-ready .proj-card.visible {
 
 /* ── About profile card ── */
 .about-profile-card {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   align-items: center;
   gap: 20px;
   background: var(--navy);
@@ -968,39 +969,43 @@ body.js-ready .proj-card.visible {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 .about-profile-img-wrap {
-  flex-shrink: 0;
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  overflow: hidden;
+  flex: 0 0 88px !important;
+  width: 88px !important;
+  height: 88px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
   border: 3px solid var(--gold);
   box-shadow: 0 0 0 4px rgba(201,168,76,0.15);
 }
 .about-profile-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 20% !important;
   display: block;
+}
+.about-profile-info {
+  flex: 1;
+  min-width: 0;
 }
 .about-profile-name {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   color: var(--white);
-  line-height: 1.1;
+  line-height: 1.15;
 }
 .about-profile-title {
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--gold);
-  margin-top: 4px;
-  letter-spacing: 0.04em;
+  margin-top: 5px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .about-profile-tag {
   font-size: 12px;
-  color: rgba(255,255,255,0.50);
+  color: rgba(255,255,255,0.45);
   margin-top: 3px;
 }
 
