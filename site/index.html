@@ -403,10 +403,10 @@
     <div class="about-inner">
       <div class="about-text">
         <div class="section-eyebrow">Channel Partner</div>
-        <h2 class="section-title">Anjni Putra Properties —<br />Your Trusted Advisor</h2>
+        <h2 class="section-title">Anjni Putra Properties —<br />Led by Mahesh Kumar</h2>
         <p class="section-body">
-          Anjni Putra Properties is an exclusive authorised channel partner for Riyasat townships, led by an Indian Army
-          Veteran with 10+ years of real estate expertise. We provide transparent, end-to-end advisory — from your first
+          Anjni Putra Properties is an exclusive authorised channel partner for Riyasat townships, led by
+          <strong>Mahesh Kumar</strong> — an Indian Army Veteran with 10+ years of real estate expertise. We provide transparent, end-to-end advisory — from your first
           site visit to final registration — with zero brokerage fees.
         </p>
         <ul class="about-list">
@@ -418,6 +418,18 @@
         </ul>
       </div>
       <div class="about-side">
+        <!-- Profile card -->
+        <div class="about-profile-card">
+          <div class="about-profile-img-wrap">
+            <img src="assets/img/mahesh-kumar.jpg" alt="Mahesh Kumar – Founder, Anjni Putra Properties" class="about-profile-img" />
+          </div>
+          <div class="about-profile-info">
+            <div class="about-profile-name">Mahesh Kumar</div>
+            <div class="about-profile-title">Founder &amp; Senior Property Advisor</div>
+            <div class="about-profile-tag">Anjni Putra Properties</div>
+          </div>
+        </div>
+        <!-- Stats -->
         <div class="about-badge-box">
           <div class="about-badge-num">10+</div>
           <div class="about-badge-label">Years of Real Estate Experience</div>
@@ -598,7 +610,7 @@
         if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
       });
     }, { threshold: 0.12 });
-    document.querySelectorAll('.proj-card, .amenity-card, .loc-item, .about-badge-box').forEach(el => obs.observe(el));
+    document.querySelectorAll('.proj-card, .amenity-card, .loc-item, .about-badge-box, .about-profile-card').forEach(el => obs.observe(el));
   </script>
   <script defer src="assets/js/sheets.js?v=54"></script>
   <script defer src="assets/js/app.js?v=55"></script>
